@@ -115,6 +115,45 @@ const getAllProducts = async (req, res, next) => {
   }
 };
 
+//Get products by category
+const getProductsByCategory = async (req, res, next) => {
+  try {
+    const { category } = req.params;
+    const page = parseInt(req.query.page || 1);
+    const limit = parseInt(req.query.limit || 10);
+    const sort = req.query.sort;
+    const sortBy = req.query.sortBy || "ASC";
+    const offset = (page - 1) * limit;
+
+    const { rows } = await productModel.selectProductsByCategory({
+      category,
+      limit,
+      offset,
+      sort,
+      sortBy,
+    });
+
+    const { rows: count } = await productModel.countDataProduct(category);
+    const totalData = count.total;
+    const totalPage = Math.ceil(totalData / limit);
+
+    const pagination = {
+      limit,
+      page,
+      totalData,
+      totalPage,
+    };
+
+    res.status(200).json({
+      message: "Get products by category success",
+      data: rows,
+      pagination,
+    });
+  } catch (error) {
+    next(createHttpError(500, error.message));
+  }
+};
+
 // Get detail product
 const getDetailProduct = async (req, res, next) => {
   try {
@@ -255,4 +294,5 @@ module.exports = {
   getAllProductsByStoresId,
   updateProduct,
   deleteProduct,
+  getProductsByCategory,
 };

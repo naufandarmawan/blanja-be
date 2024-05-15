@@ -81,6 +81,37 @@ const countDataProduct = (search) => {
 
   return db.query(query, queryParams);
 };
+//Get products by category
+const selectProductsByCategory = async ({
+  category,
+  limit,
+  offset,
+  sort,
+  sortBy,
+}) => {
+  let query = "SELECT * FROM products WHERE category = $1";
+  const queryParams = [category];
+
+  if (sort) {
+    query += ` ORDER BY ${sort} ${sortBy}`;
+  }
+
+  if (limit !== undefined) {
+    if (!sort) {
+      query += " ORDER BY name ASC";
+    }
+    query += ` LIMIT $${queryParams.length + 1}`;
+    queryParams.push(limit);
+    if (offset !== undefined) {
+      query += ` OFFSET $${queryParams.length + 1}`;
+      queryParams.push(offset);
+    }
+  }
+
+  const result = await db.query(query, queryParams);
+  const count = await countDataProduct(category);
+  return { rows: result.rows, count };
+};
 
 // Get Detail Product
 const selectDetailProduct = (products_id) => {
@@ -170,4 +201,5 @@ module.exports = {
   selectProductByStoresId,
   updateProduct,
   deleteProduct,
+  selectProductsByCategory,
 };
