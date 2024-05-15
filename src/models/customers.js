@@ -14,14 +14,7 @@ const postCustomers = (dataCustomers) => {
   );
 };
 
-const updateUsers = (dataUsers, Cemail) => {
-  return pool.query("UPDATE users SET email = $1 WHERE email = $2", [
-    dataUsers.email,
-    Cemail,
-  ]);
-};
-
-const updateCustomers = (dataCustomers, Cemail) => {
+const updateCustomers = (dataCustomers, email) => {
   return pool.query(
     "UPDATE customers SET name = $1, phone = $2, gender = $3, date_of_birth = $4 FROM users WHERE customers.user_id = users.user_id AND users.email = $5",
     [
@@ -29,7 +22,7 @@ const updateCustomers = (dataCustomers, Cemail) => {
       dataCustomers.phone,
       dataCustomers.gender,
       dataCustomers.date_of_birth,
-      Cemail,
+      email,
     ]
   );
 };
@@ -38,5 +31,4 @@ module.exports = {
   postUsers,
   postCustomers,
   updateCustomers,
-  updateUsers,
 };

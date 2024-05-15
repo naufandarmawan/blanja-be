@@ -1,12 +1,11 @@
 const { v4: uuidv4 } = require("uuid");
 const { response } = require("../helper/common");
 const newError = require("http-errors");
-const { findByemail, findByemailProfile } = require("../models/auth");
+const { findByemail } = require("../models/auth");
 const {
   postUsers,
   postCustomers,
   updateCustomers,
-  updateUsers,
 } = require("../models/customers");
 
 // Add Customers
@@ -73,18 +72,8 @@ const profileCustomers = async (req, res, next) => {
 
 // Update Customers
 const putCustomers = async (req, res, next) => {
-  const Cemail = req.decoded.email;
-  const { name, email, phone, gender, date_of_birth } = req.body;
-  // const {
-  //   rows: [user],
-  // } = await findByemailProfile(email);
-  // if (user) {
-  //   return next(newError(403, "Email Already Registered"));
-  // }
-
-  const dataUsers = {
-    email,
-  };
+  const email = req.decoded.email;
+  const { name, phone, gender, date_of_birth } = req.body;
 
   const dataCustomers = {
     name,
@@ -93,8 +82,7 @@ const putCustomers = async (req, res, next) => {
     date_of_birth,
   };
   try {
-    await updateCustomers(dataCustomers, Cemail);
-    await updateUsers(dataUsers, Cemail);
+    await updateCustomers(dataCustomers, email);
     response(res, dataCustomers, 200, "Data successfully Added!");
   } catch (error) {
     console.log(error);

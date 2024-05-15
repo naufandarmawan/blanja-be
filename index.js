@@ -10,6 +10,7 @@ const dotenv = require("dotenv");
 const registerRoutes = require("./src/routes/register");
 const authRoutes = require("./src/routes/auth");
 const customerRoutes = require("./src/routes/customers");
+const storeRoutes = require("./src/routes/stores");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -27,6 +28,7 @@ app.use(xss());
 app.use("/register", registerRoutes);
 app.use("/auth", authRoutes);
 app.use("/customer", customerRoutes);
+app.use("/store", storeRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);

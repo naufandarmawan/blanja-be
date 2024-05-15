@@ -21,7 +21,7 @@ const login = async (req, res, next) => {
     }
     delete user.password;
     const payload = {
-      user_id: user.user_id,
+      email: user.email,
       role: user.role,
     };
     const token = generateToken(payload);
