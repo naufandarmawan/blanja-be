@@ -11,6 +11,7 @@ const registerRoutes = require("./src/routes/register");
 const authRoutes = require("./src/routes/auth");
 const customerRoutes = require("./src/routes/customers");
 const storeRoutes = require("./src/routes/stores");
+const productsRouter = require("./src/routes/products");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -18,17 +19,18 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(bodyParser.json());
 app.use(cors());
 app.use(helmet());
 app.use(xss());
 
-// Routes
+
+
 app.use("/register", registerRoutes);
 app.use("/auth", authRoutes);
 app.use("/customer", customerRoutes);
 app.use("/store", storeRoutes);
+app.use("/products", productsRouter);
 
 app.use((error, req, res, next) => {
   console.log(error);
@@ -40,7 +42,16 @@ app.use((error, req, res, next) => {
   });
 });
 
-// Start the server
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.json({
+    error: {
+      message: err.message,
+    },
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
