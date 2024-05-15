@@ -7,6 +7,7 @@ const {
   getAllProductsByStoresId,
   updateProduct,
   deleteProduct,
+  getProductsByCategory,
 } = require("../controllers/products");
 
 const route = express.Router();
@@ -17,6 +18,7 @@ route
   .get("/:id", getDetailProduct)
   .get("/:id", getAllProductsByStoresId)
   .put("/:id", updateProduct)
-  .delete("/:id", deleteProduct);
+  .delete("/:id", deleteProduct)
+  .get("/category/:category", getProductsByCategory);
 
 module.exports = route;
