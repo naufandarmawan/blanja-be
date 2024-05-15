@@ -1,9 +1,17 @@
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const dotenv = require("dotenv");
+
+// Routes
+const registerRoutes = require("./src/routes/register");
+const authRoutes = require("./src/routes/auth");
+const customerRoutes = require("./src/routes/customers");
+const storeRoutes = require("./src/routes/stores");
+const productsRouter = require("./src/routes/products");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -16,13 +24,23 @@ app.use(cors());
 app.use(helmet());
 app.use(xss());
 
-const productsRouter = require("./src/routes/products");
 
-app.get("/", (req, res) => {
-  res.send("Hello World!!!");
-});
 
+app.use("/register", registerRoutes);
+app.use("/auth", authRoutes);
+app.use("/customer", customerRoutes);
+app.use("/store", storeRoutes);
 app.use("/products", productsRouter);
+
+app.use((error, req, res, next) => {
+  console.log(error);
+  const messageError = error.message || "Internal Server Error";
+  const statusCode = error.statusCode || 500;
+
+  res.status(statusCode).json({
+    message: messageError,
+  });
+});
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
