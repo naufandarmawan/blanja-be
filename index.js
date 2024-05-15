@@ -11,18 +11,29 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(bodyParser.json());
 app.use(cors());
 app.use(helmet());
 app.use(xss());
 
-// Routes
+const productsRouter = require("./src/routes/products");
+
 app.get("/", (req, res) => {
   res.send("Hello World!!!");
 });
 
-// Start the server
+app.use("/products", productsRouter);
+
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.json({
+    error: {
+      message: err.message,
+    },
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
