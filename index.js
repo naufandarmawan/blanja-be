@@ -26,6 +26,10 @@ app.use(cors());
 app.use(helmet());
 app.use(xss());
 
+app.get("/", (req, res) => {
+  res.send("Blanja Server Ready to Use!!");
+});
+
 app.use("/register", registerRoutes);
 app.use("/auth", authRoutes);
 app.use("/customer", customerRoutes);

@@ -1,6 +1,12 @@
-![Logo](./assets/logo-readme.png)
+<p align="center">
+  <img src="./assets/logo-readme.png" alt="Logo">
+</p>
 
-# [![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=26&pause=1000&color=DB3022&random=false&width=435&lines=Blanja+Back+End+Application)](https://git.io/typing-svg)
+<h1 align="center">
+  <a href="https://git.io/typing-svg">
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=26&pause=1000&color=DB3022&random=false&width=435&lines=Blanja+Back+End+Application" alt="Typing SVG">
+  </a>
+</h1>
 
 Welcome to Blanja, your premier destination for all things e-commerce. Blanja offers a seamless and secure online shopping experience, providing a wide range of products to cater to every need and preference.
 
@@ -78,12 +84,12 @@ cloudinary credentials:
 
 `API_SECRET`
 
-## Authors
+## Developed by the FWM19 Team :
 
-💻 [@anditorp](https://github.com/anditorp)
+💻 [@anditorp](https://github.com/anditorp) as back end
 
-💻 [@SwitchZer](https://github.com/SwitchZer)
+💻 [@SwitchZer](https://github.com/SwitchZer) as back end
 
-💻 [@crossxjonathan](https://github.com/crossxjonathan)
+💻 [@crossxjonathan](https://github.com/crossxjonathan) as front end
 
-💻 [@naufandarmawan](https://github.com/naufandarmawan)
+💻 [@naufandarmawan](https://github.com/naufandarmawan) as front end
