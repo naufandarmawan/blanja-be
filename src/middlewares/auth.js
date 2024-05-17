@@ -10,18 +10,10 @@ const protect = (req, res, next) => {
       req.decoded = decoded;
       next();
     } else {
-      next(createHttpError(400, "Server Need Token"));
+      next(createHttpError(401, "Unauthorized: Token is required"));
     }
   } catch (error) {
-    if (error && error.name === "TokenExpiredError") {
-      next(createHttpError(400, "token expired"));
-    } else if (error && error.name === "JsonWebTokenError") {
-      next(createHttpError(400, "token invalid"));
-    } else if (error && error.name === "NotBeforeError") {
-      next(createHttpError(400, "token not active"));
-    } else {
-      next(new createHttpError.InternalServerError());
-    }
+    next(createHttpError(401, "Unauthorized: Invalid or expired token"));
   }
 };
 
@@ -29,7 +21,7 @@ const checkRole = (roleName) => {
   return (req, res, next) => {
     const role = req.decoded.role;
     if (role !== roleName) {
-      next(createHttpError(403, `${roleName} only!!`));
+      next(createHttpError(403, `Forbidden: ${roleName} only`));
       return;
     }
     next();
