@@ -7,25 +7,27 @@ const postUsers = (dataUsers) => {
   );
 };
 
-const postStores = (dataWorkers) => {
+const postStores = (dataStores) => {
   return pool.query(
-    "INSERT INTO stores (stores_id, user_id, store_name, phone) VALUES ($1, $2, $3, $4)",
+    "INSERT INTO stores (stores_id, user_id, store_name, phone, name) VALUES ($1, $2, $3, $4, $5)",
     [
-      dataWorkers.id,
-      dataWorkers.user_id,
-      dataWorkers.store_name,
-      dataWorkers.phone,
+      dataStores.id,
+      dataStores.user_id,
+      dataStores.store_name,
+      dataStores.phone,
+      dataStores.name,
     ]
   );
 };
 
 const updateStores = (dataStores, email) => {
   return pool.query(
-    "UPDATE stores SET store_name = $1, phone = $2, store_description = $3 FROM users WHERE stores.user_id = users.user_id AND users.email = $4",
+    "UPDATE stores SET store_name = $1, phone = $2, store_description = $3, image = $4 FROM users WHERE stores.user_id = users.user_id AND users.email = $5",
     [
       dataStores.store_name,
       dataStores.phone,
       dataStores.store_description,
+      dataStores.image,
       email,
     ]
   );

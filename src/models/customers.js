@@ -16,12 +16,13 @@ const postCustomers = (dataCustomers) => {
 
 const updateCustomers = (dataCustomers, email) => {
   return pool.query(
-    "UPDATE customers SET name = $1, phone = $2, gender = $3, date_of_birth = $4 FROM users WHERE customers.user_id = users.user_id AND users.email = $5",
+    "UPDATE customers SET name = $1, phone = $2, gender = $3, date_of_birth = $4, image = $5 FROM users WHERE customers.user_id = users.user_id AND users.email = $6",
     [
       dataCustomers.name,
       dataCustomers.phone,
       dataCustomers.gender,
       dataCustomers.date_of_birth,
+      dataCustomers.image,
       email,
     ]
   );

@@ -1,5 +1,5 @@
 const express = require("express");
-const { profileCustomers, putCustomers } = require("../controller/customers");
+const { profileCustomers, putCustomers } = require("../controllers/customers");
 const { protect, checkRole } = require("../middlewares/auth");
 const route = express.Router();
 
