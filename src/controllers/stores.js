@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const { response } = require("../helper/common");
 const newError = require("http-errors");
+const cloudinary = require("../configs/cloudinary");
 const { findByemail } = require("../models/auth");
 const { postUsers, postStores, updateStores } = require("../models/stores");
 
