@@ -9,16 +9,18 @@ const {
   deleteProduct,
   getProductsByCategory,
 } = require("../controllers/products");
+const { protect, checkRole } = require("../middlewares/auth");
 
 const route = express.Router();
 
 route
-  .post("/", createProducts)
+  .post("/", protect, checkRole("store"), createProducts)
   .get("/", getAllProducts)
   .get("/:id", getDetailProduct)
   .get("/:id", getAllProductsByStoresId)
-  .put("/:id", updateProduct)
-  .delete("/:id", deleteProduct)
+  .put("/:id", protect, checkRole("store"), updateProduct)
+  .delete("/:id", checkRole("store"), deleteProduct)
+  .delete("/:id", protect, checkRole("store"), deleteProduct)
   .get("/category/:category", getProductsByCategory);
 
 module.exports = route;
