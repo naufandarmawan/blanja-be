@@ -1,6 +1,6 @@
 const express = require("express");
 const { protect, checkRole } = require("../middlewares/auth");
-const { profileStores, putStores } = require("../controller/stores");
+const { profileStores, putStores } = require("../controllers/stores");
 const route = express.Router();
 
 route

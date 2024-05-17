@@ -11,11 +11,11 @@ const findByemail = (email, { relation } = { relation: "" }) => {
   );
 };
 
-const findByemailProfile = (email) => {
-  return pool.query(`SELECT users.email FROM users WHERE email = $1`, [email]);
+const checkRoles = (email) => {
+  return pool.query(`SELECT users.role FROM users WHERE email = $1`, [email]);
 };
 
 module.exports = {
   findByemail,
-  findByemailProfile,
+  checkRoles,
 };

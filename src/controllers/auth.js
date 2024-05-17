@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { response } = require("../helper/common");
 const { generateToken, generateRefreshToken } = require("../helper/auth");
-const { findByemail } = require("../models/auth");
+const { findByemail, checkRoles } = require("../models/auth");
 
 const login = async (req, res, next) => {
   try {
@@ -49,7 +49,37 @@ const refreshToken = (req, res, next) => {
   response(res, data, 200, "Refresh Token Success");
 };
 
+const tokenBlacklist = new Set();
+const logout = (req, res, next) => {
+  try {
+    const token = req.headers.authorization;
+    tokenBlacklist.add(token); // Add the token to the blacklist
+
+    res.json({ message: "Logout successful" });
+  } catch (error) {
+    console.log(error);
+    next(new newError.InternalServerError());
+  }
+};
+
+const checkRole = async (req, res, next) => {
+  try {
+    const email = req.decoded.email;
+
+    const {
+      rows: [user],
+    } = await checkRoles(email);
+
+    response(res, user, 200, "get profile success");
+  } catch (error) {
+    console.log(error);
+    next(new newError.InternalServerError());
+  }
+};
+
 module.exports = {
   login,
   refreshToken,
+  logout,
+  checkRole,
 };
