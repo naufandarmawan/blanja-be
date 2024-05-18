@@ -1,5 +1,6 @@
 const createHttpError = require("http-errors");
 const ordersModel = require("../models/orders");
+// const productsModel = require("../models/products");
 const authModel = require("../models/auth");
 
 // Create order
@@ -7,11 +8,10 @@ const addMyOrder = async (req, res, next) => {
   try {
     const email = req.decoded.email;
     const {
-      rows: [customer],
+      rows: [order],
     } = await authModel.findByemail(email, { relation: "customers" });
 
     const { color, quantity, size } = req.body;
-
     if (!color || !quantity || !size) {
       return next(
         createHttpError(
@@ -21,8 +21,11 @@ const addMyOrder = async (req, res, next) => {
       );
     }
 
+    const products_id = req.params.products_id;
+    // const product = await productsModel.selectDetailProduct(product.products_id)
     const order_id = await ordersModel.createOrder(
-      customer.customers_id,
+      order.customers_id,
+      products_id,
       color,
       quantity,
       size
@@ -31,7 +34,7 @@ const addMyOrder = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Order placed successfully.",
-      data: { order_id, color, quantity, size },
+      data: { order_id, products_id, color, quantity, size },
     });
   } catch (error) {
     return next(createHttpError(500, error.message));
