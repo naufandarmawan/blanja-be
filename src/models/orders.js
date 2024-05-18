@@ -2,19 +2,36 @@ const { v4: uuidv4 } = require("uuid");
 const db = require("../configs/db");
 
 // Create order
-const createOrder = async (customers_id, color, quantity, size) => {
+const createOrder = async (
+  customers_id,
+  products_id,
+  color,
+  quantity,
+  size
+) => {
   const order_id = uuidv4();
   await db.query(
-    `INSERT INTO "order" (order_id, customers_id, color, quantity, size) VALUES ($1, $2, $3, $4, $5)`,
-    [order_id, customers_id, color, quantity, size]
+    `INSERT INTO "order" (order_id, customers_id, products_id, color, quantity, size) VALUES ($1, $2, $3, $4, $5, $6 )`,
+    [order_id, customers_id, products_id, color, quantity, size]
   );
   return order_id;
 };
 
 const getOrdersByCustomerId = async (customers_id) => {
-  return await db.query(`SELECT * FROM "order" WHERE customers_id = $1`, [
-    customers_id,
-  ]);
+  const query = `
+    SELECT 
+      o.*,
+      p.name AS product_name,
+      p.image AS product_image,
+      p.price AS product_price,
+      p.condition AS product_condition,
+      p.description AS product_description
+    FROM "order" o
+    JOIN products p ON o.products_id = p.products_id
+    WHERE o.customers_id = $1
+  `;
+
+  return await db.query(query, [customers_id]);
 };
 
 const getAllOrders = async () => {
