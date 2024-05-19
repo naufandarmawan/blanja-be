@@ -1,7 +1,7 @@
 const db = require("../configs/db");
 
 // Create product
-const insertProduct = (data) => {
+const insertProduct = (data, email) => {
   const {
     products_id,
     name,
@@ -12,7 +12,6 @@ const insertProduct = (data) => {
     stock,
     condition,
     description,
-    stores_id,
     category,
   } = data;
 
@@ -27,9 +26,9 @@ const insertProduct = (data) => {
       stock,
       condition,
       description,
-      stores_id,
-      category
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+      category,
+      stores_id
+    ) SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, stores.stores_id FROM stores JOIN users ON stores.user_id = users.user_id WHERE users.email = $11`,
     [
       products_id,
       name,
@@ -40,8 +39,8 @@ const insertProduct = (data) => {
       stock,
       condition,
       description,
-      stores_id,
       category,
+      email,
     ]
   );
 };

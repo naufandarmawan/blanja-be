@@ -17,16 +17,15 @@ const createProducts = async (req, res, next) => {
       condition,
       description,
       category,
-      stores_id,
     } = req.body;
 
     const products_id = uuidv4();
 
-    if (!name || !price || !stores_id || !category) {
+    if (!name || !price || !category) {
       return next(
         createHttpError(
           400,
-          "Missing required fields: name, price, stores_id, and category are required."
+          "Missing required fields: name, price, and category are required."
         )
       );
     }
@@ -48,6 +47,7 @@ const createProducts = async (req, res, next) => {
         );
       }
     }
+    const email = req.decoded.email;
 
     const data = {
       products_id,
@@ -60,10 +60,9 @@ const createProducts = async (req, res, next) => {
       condition: condition || "",
       description: description || "",
       category,
-      stores_id,
     };
 
-    const result = await productModel.insertProduct(data);
+    const result = await productModel.insertProduct(data, email);
 
     if (result?.rowCount > 0) {
       return res.status(201).json({
@@ -215,7 +214,6 @@ const getAllProductsByLogin = async (req, res, next) => {
     next(new newError.InternalServerError());
   }
 };
-// Get Address
 
 // Update product
 const updateProduct = async (req, res, next) => {
