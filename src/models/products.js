@@ -193,6 +193,14 @@ const deleteProduct = (products_id) => {
   return db.query("DELETE FROM products WHERE products_id = $1", [products_id]);
 };
 
+// Read Product by Login
+const readAllProductsByLogin = (email) => {
+  return db.query(
+    "SELECT * FROM products JOIN stores ON products.stores_id = stores.stores_id JOIN users ON stores.user_id = users.user_id WHERE users.email = $1",
+    [email]
+  );
+};
+
 module.exports = {
   insertProduct,
   selectAllProducts,
@@ -202,4 +210,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   selectProductsByCategory,
+  readAllProductsByLogin,
 };
