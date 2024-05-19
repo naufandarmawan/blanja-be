@@ -209,7 +209,7 @@ const getAllProductsByLogin = async (req, res, next) => {
     if (rows == 0) {
       return next(new newError.NotFound("Product Not Found"));
     }
-    response(res, rows, 200, "get Address success");
+    response(res, rows, 200, "get Products success");
   } catch (error) {
     console.log(error);
     next(new newError.InternalServerError());
