@@ -2,6 +2,8 @@ const { v4: uuidv4 } = require("uuid");
 const createHttpError = require("http-errors");
 const productModel = require("../models/products");
 const cloudinary = require("../configs/cloudinary");
+const { response } = require("../helper/common");
+const newError = require("http-errors");
 
 // Create product
 const createProducts = async (req, res, next) => {
@@ -197,6 +199,24 @@ const getAllProductsByStoresId = async (req, res, next) => {
   }
 };
 
+// Get products by login
+const getAllProductsByLogin = async (req, res, next) => {
+  try {
+    const email = req.decoded.email;
+
+    const { rows } = await productModel.readAllProductsByLogin(email);
+
+    if (rows == 0) {
+      return next(new newError.NotFound("Product Not Found"));
+    }
+    response(res, rows, 200, "get Address success");
+  } catch (error) {
+    console.log(error);
+    next(new newError.InternalServerError());
+  }
+};
+// Get Address
+
 // Update product
 const updateProduct = async (req, res, next) => {
   try {
@@ -295,4 +315,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   getProductsByCategory,
+  getAllProductsByLogin,
 };
