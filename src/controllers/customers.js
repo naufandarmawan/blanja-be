@@ -115,7 +115,6 @@ const updatePhotoProfile = async (req, res, next) => {
     next(error);
   }
 };
-
 // Update Photo Profile
 
 module.exports = {
