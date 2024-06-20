@@ -1,9 +1,9 @@
 const createHttpError = require("http-errors");
 const ordersModel = require("../models/orders");
-// const productsModel = require("../models/products");
 const authModel = require("../models/auth");
+const { v4: uuidv4 } = require("uuid");
+const db = require("../configs/db");
 
-// Create order
 const addMyOrder = async (req, res, next) => {
   try {
     const email = req.decoded.email;
@@ -22,7 +22,6 @@ const addMyOrder = async (req, res, next) => {
     }
 
     const products_id = req.params.products_id;
-    // const product = await productsModel.selectDetailProduct(product.products_id)
     const order_id = await ordersModel.createOrder(
       order.customers_id,
       products_id,
@@ -40,14 +39,13 @@ const addMyOrder = async (req, res, next) => {
     return next(createHttpError(500, error.message));
   }
 };
-// Get My Orders
+
 const getMyOrder = async (req, res, next) => {
   try {
     const email = req.decoded.email;
     const {
       rows: [customers],
     } = await authModel.findByemail(email, { relation: "customers" });
-    console.log(customers);
     const { rows: orders } = await ordersModel.getOrdersByCustomerId(
       customers.customers_id
     );
@@ -64,7 +62,7 @@ const getMyOrder = async (req, res, next) => {
 
 const getAllMyOrders = async (req, res, next) => {
   try {
-    const { orders } = await ordersModel.getAllOrders();
+    const { rows: orders } = await ordersModel.getAllOrders();
     res.status(200).json({
       success: true,
       message: "Orders retrieved successfully.",
@@ -83,7 +81,7 @@ const updateMyOrder = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Order updated successfully.",
-      data: { order_id: order_id, color, quantity, size },
+      data: { order_id, color, quantity, size },
     });
   } catch (error) {
     return next(createHttpError(500, error.message));
@@ -104,10 +102,127 @@ const deleteMyOrder = async (req, res, next) => {
   }
 };
 
+const checkout = async (req, res, next) => {
+  try {
+    const email = req.decoded.email;
+    const {
+      rows: [customer],
+    } = await authModel.findByemail(email, { relation: "customers" });
+
+    if (!customer) {
+      return next(createHttpError(404, "Customer not found"));
+    }
+
+    const { rows: orders } = await ordersModel.getOrdersByCustomerId(
+      customer.customers_id
+    );
+
+    if (!orders.length) {
+      return next(createHttpError(404, "No orders found for this customer"));
+    }
+
+    const total_price = orders.reduce(
+      (acc, order) => acc + order.product_price * order.quantity,
+      0
+    );
+
+    const paymentMethods = await ordersModel.getPaymentMethods();
+
+    res.status(200).json({
+      success: true,
+      message: "Checkout information retrieved successfully.",
+      data: {
+        total_price,
+        products: orders.map((order) => ({
+          product_name: order.product_name,
+          product_image: order.product_image,
+          product_price: order.product_price,
+          color: order.color,
+          quantity: order.quantity,
+          size: order.size,
+        })),
+        payment_methods: paymentMethods,
+      },
+    });
+  } catch (error) {
+    return next(createHttpError(500, error.message));
+  }
+};
+
+const moveOrdersToHistory = async (req, res, next) => {
+  try {
+    const email = req.decoded.email;
+    const {
+      rows: [customer],
+    } = await authModel.findByemail(email, { relation: "customers" });
+
+    if (!customer) {
+      return next(createHttpError(404, "Customer not found"));
+    }
+
+    const { rows: orders } = await ordersModel.getOrdersByCustomerId(
+      customer.customers_id
+    );
+
+    if (!orders.length) {
+      return next(createHttpError(404, "No orders found for this customer"));
+    }
+
+    await db.query("BEGIN");
+
+    for (const order of orders) {
+      await ordersModel.addOrderToHistory({
+        ...order,
+        history_id: uuidv4(),
+      });
+    }
+
+    await ordersModel.deleteOrdersByCustomerId(customer.customers_id);
+
+    await db.query("COMMIT");
+
+    res.status(200).json({
+      success: true,
+      message: "Orders successfully moved to history.",
+    });
+  } catch (error) {
+    await db.query("ROLLBACK");
+    return next(createHttpError(500, error.message));
+  }
+};
+
+const getOrderHistory = async (req, res, next) => {
+  try {
+    const email = req.decoded.email;
+    const {
+      rows: [customer],
+    } = await authModel.findByemail(email, { relation: "customers" });
+
+    if (!customer) {
+      return next(createHttpError(404, "Customer not found"));
+    }
+
+    const { rows: history } = await ordersModel.getOrderHistoryByCustomerId(
+      customer.customers_id
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Order history retrieved successfully.",
+      data: history,
+    });
+  } catch (error) {
+    return next(createHttpError(500, error.message));
+  }
+};
+
 module.exports = {
   addMyOrder,
   getMyOrder,
   getAllMyOrders,
   updateMyOrder,
   deleteMyOrder,
+  checkout,
+  moveOrdersToHistory,
+  getOrderHistory,
 };
