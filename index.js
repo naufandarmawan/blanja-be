@@ -38,6 +38,7 @@ app.use("/store", storeRoutes);
 app.use("/products", productsRouter);
 app.use("/order", orderRouter);
 app.use("/address", addressRouter);
+app.use("/upload", addressRouter);
 
 app.use((error, req, res, next) => {
   console.log(error);

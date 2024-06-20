@@ -2,6 +2,8 @@ const { v4: uuidv4 } = require("uuid");
 const createHttpError = require("http-errors");
 const productModel = require("../models/products");
 const cloudinary = require("../configs/cloudinary");
+const { response } = require("../helper/common");
+const newError = require("http-errors");
 
 // Create product
 const createProducts = async (req, res, next) => {
@@ -15,16 +17,15 @@ const createProducts = async (req, res, next) => {
       condition,
       description,
       category,
-      stores_id,
     } = req.body;
 
     const products_id = uuidv4();
 
-    if (!name || !price || !stores_id || !category) {
+    if (!name || !price || !category) {
       return next(
         createHttpError(
           400,
-          "Missing required fields: name, price, stores_id, and category are required."
+          "Missing required fields: name, price, and category are required."
         )
       );
     }
@@ -46,6 +47,7 @@ const createProducts = async (req, res, next) => {
         );
       }
     }
+    const email = req.decoded.email;
 
     const data = {
       products_id,
@@ -58,10 +60,9 @@ const createProducts = async (req, res, next) => {
       condition: condition || "",
       description: description || "",
       category,
-      stores_id,
     };
 
-    const result = await productModel.insertProduct(data);
+    const result = await productModel.insertProduct(data, email);
 
     if (result?.rowCount > 0) {
       return res.status(201).json({
@@ -197,6 +198,23 @@ const getAllProductsByStoresId = async (req, res, next) => {
   }
 };
 
+// Get products by login
+const getAllProductsByLogin = async (req, res, next) => {
+  try {
+    const email = req.decoded.email;
+
+    const { rows } = await productModel.readAllProductsByLogin(email);
+
+    if (rows == 0) {
+      return next(new newError.NotFound("Product Not Found"));
+    }
+    response(res, rows, 200, "get Products success");
+  } catch (error) {
+    console.log(error);
+    next(new newError.InternalServerError());
+  }
+};
+
 // Update product
 const updateProduct = async (req, res, next) => {
   try {
@@ -295,4 +313,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   getProductsByCategory,
+  getAllProductsByLogin,
 };

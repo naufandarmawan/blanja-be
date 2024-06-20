@@ -1,8 +1,14 @@
 const { v4: uuidv4 } = require("uuid");
 const { response } = require("../helper/common");
 const newError = require("http-errors");
+const cloudinary = require("../configs/cloudinary");
 const { findByemail } = require("../models/auth");
-const { postUsers, postStores, updateStores } = require("../models/stores");
+const {
+  postUsers,
+  postStores,
+  updateStores,
+  updatePhoto,
+} = require("../models/stores");
 
 // Add Stores
 const bcrypt = require("bcrypt");
@@ -73,27 +79,10 @@ const putStores = async (req, res, next) => {
   const email = req.decoded.email;
   const { store_name, phone, store_description } = req.body;
 
-  let imageUrl = "";
-  if (req.file) {
-    try {
-      const uploadToCloudinary = await cloudinary.uploader.upload(
-        req.file.path,
-        {
-          folder: "blanja/profile",
-        }
-      );
-
-      imageUrl = uploadToCloudinary.secure_url;
-    } catch (uploadError) {
-      return next(newError(400, "Upload image failed: " + uploadError.message));
-    }
-  }
-
   const dataStores = {
     store_name,
     phone,
     store_description,
-    image: imageUrl || req.body.image,
   };
   try {
     await updateStores(dataStores, email);
@@ -105,8 +94,33 @@ const putStores = async (req, res, next) => {
 };
 // Update Stores
 
+// Update Photo Profile
+const updatePhotoProfile = async (req, res, next) => {
+  try {
+    const email = req.decoded.email;
+    const {
+      rows: [user],
+    } = await findByemail(email);
+
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const urlPhoto = result.secure_url;
+    await updatePhoto(urlPhoto, user.user_id);
+    response(
+      res,
+      { photo: urlPhoto },
+      200,
+      "update photo profile stores success "
+    );
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+// Update Photo Profile
+
 module.exports = {
   addStores,
   putStores,
   profileStores,
+  updatePhotoProfile,
 };

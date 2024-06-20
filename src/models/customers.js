@@ -16,20 +16,27 @@ const postCustomers = (dataCustomers) => {
 
 const updateCustomers = (dataCustomers, email) => {
   return pool.query(
-    "UPDATE customers SET name = $1, phone = $2, gender = $3, date_of_birth = $4, image = $5 FROM users WHERE customers.user_id = users.user_id AND users.email = $6",
+    "UPDATE customers SET name = $1, phone = $2, gender = $3, date_of_birth = $4, FROM users WHERE customers.user_id = users.user_id AND users.email = $5",
     [
       dataCustomers.name,
       dataCustomers.phone,
       dataCustomers.gender,
       dataCustomers.date_of_birth,
-      dataCustomers.image,
       email,
     ]
   );
+};
+
+const updatePhoto = (urlPhoto, id) => {
+  return pool.query("UPDATE customers SET image = $1 WHERE user_id = $2", [
+    urlPhoto,
+    id,
+  ]);
 };
 
 module.exports = {
   postUsers,
   postCustomers,
   updateCustomers,
+  updatePhoto,
 };

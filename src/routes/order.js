@@ -5,16 +5,26 @@ const {
   getAllMyOrders,
   updateMyOrder,
   deleteMyOrder,
+  checkout,
+  moveOrdersToHistory,
+  getOrderHistory,
 } = require("../controllers/orders");
 const { protect, checkRole } = require("../middlewares/auth");
 
-const route = express.Router();
+const router = express.Router();
 
-route
-  .post("/:products_id", protect, checkRole("customer"), addMyOrder)
-  .get("/", protect, checkRole("customer"), getAllMyOrders)
-  .get("/my-order", protect, checkRole("customer"), getMyOrder)
-  .put("/:id", protect, checkRole("customer"), updateMyOrder)
-  .delete("/:id", protect, checkRole("customer"), deleteMyOrder);
+router.post("/:products_id", protect, checkRole("customer"), addMyOrder);
+router.get("/", protect, checkRole("customer"), getAllMyOrders);
+router.get("/my-order", protect, checkRole("customer"), getMyOrder);
+router.get("/checkout", protect, checkRole("customer"), checkout);
+router.get("/order-history", protect, checkRole("customer"), getOrderHistory);
+router.post(
+  "/move-orders-to-history",
+  protect,
+  checkRole("customer"),
+  moveOrdersToHistory
+);
+router.put("/:id", protect, checkRole("customer"), updateMyOrder);
+router.delete("/:id", protect, checkRole("customer"), deleteMyOrder);
 
-module.exports = route;
+module.exports = router;

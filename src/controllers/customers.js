@@ -7,6 +7,7 @@ const {
   postUsers,
   postCustomers,
   updateCustomers,
+  updatePhoto,
 } = require("../models/customers");
 
 // Add Customers
@@ -76,28 +77,11 @@ const putCustomers = async (req, res, next) => {
   const email = req.decoded.email;
   const { name, phone, gender, date_of_birth } = req.body;
 
-  let imageUrl = "";
-  if (req.file) {
-    try {
-      const uploadToCloudinary = await cloudinary.uploader.upload(
-        req.file.path,
-        {
-          folder: "blanja/profile",
-        }
-      );
-
-      imageUrl = uploadToCloudinary.secure_url;
-    } catch (uploadError) {
-      return next(newError(400, "Upload image failed: " + uploadError.message));
-    }
-  }
-
   const dataCustomers = {
     name,
     phone,
     gender,
     date_of_birth,
-    image: imageUrl || req.body.image,
   };
   try {
     await updateCustomers(dataCustomers, email);
@@ -109,8 +93,33 @@ const putCustomers = async (req, res, next) => {
 };
 // Update Customers
 
+// Update Photo Profile
+const updatePhotoProfile = async (req, res, next) => {
+  try {
+    const email = req.decoded.email;
+    const {
+      rows: [user],
+    } = await findByemail(email);
+
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const urlPhoto = result.secure_url;
+    await updatePhoto(urlPhoto, user.user_id);
+    response(
+      res,
+      { photo: urlPhoto },
+      200,
+      "update photo profile workers success "
+    );
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+// Update Photo Profile
+
 module.exports = {
   addCustomers,
   profileCustomers,
   putCustomers,
+  updatePhotoProfile,
 };

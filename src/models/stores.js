@@ -33,8 +33,16 @@ const updateStores = (dataStores, email) => {
   );
 };
 
+const updatePhoto = (urlPhoto, id) => {
+  return pool.query("UPDATE stores SET image = $1 WHERE user_id = $2", [
+    urlPhoto,
+    id,
+  ]);
+};
+
 module.exports = {
   postUsers,
   postStores,
   updateStores,
+  updatePhoto,
 };
