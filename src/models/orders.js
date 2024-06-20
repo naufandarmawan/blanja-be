@@ -25,7 +25,8 @@ const getOrdersByCustomerId = async (customers_id) => {
       p.image AS product_image,
       p.price AS product_price,
       p.condition AS product_condition,
-      p.description AS product_description
+      p.description AS product_description,
+      SUM(p.price) OVER (PARTITION BY o.order_id) AS total_price
     FROM "order" o
     JOIN products p ON o.products_id = p.products_id
     WHERE o.customers_id = $1

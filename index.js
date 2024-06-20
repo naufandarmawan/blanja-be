@@ -19,10 +19,11 @@ const addressRouter = require("./src/routes/address");
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 app.use(bodyParser.json());
 app.use(cors());
+
 app.use(helmet());
 app.use(xss());
 
