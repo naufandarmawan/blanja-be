@@ -11,7 +11,7 @@ const generateToken = (payload) => {
 
 const generateRefreshToken = (payload) => {
   const verifyOpts = {
-    expiresIn: "1 Hour",
+    expiresIn: "1 Day",
     issuer: "Blanja",
   };
   const token = jwt.sign(payload, process.env.SECRET_KEY_JWT, verifyOpts);

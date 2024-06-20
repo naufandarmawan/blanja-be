@@ -14,6 +14,7 @@ const storeRoutes = require("./src/routes/stores");
 const productsRouter = require("./src/routes/products");
 const orderRouter = require("./src/routes/order");
 const addressRouter = require("./src/routes/address");
+const uploadRouter = require("./src/routes/upload");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -38,7 +39,7 @@ app.use("/store", storeRoutes);
 app.use("/products", productsRouter);
 app.use("/order", orderRouter);
 app.use("/address", addressRouter);
-app.use("/upload", addressRouter);
+app.use("/upload", uploadRouter);
 
 app.use((error, req, res, next) => {
   console.log(error);
