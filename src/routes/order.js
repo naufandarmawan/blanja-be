@@ -16,7 +16,7 @@ const router = express.Router();
 router.get("/", protect, checkRole("customer"), getAllMyOrders);
 router.get("/my-order", protect, checkRole("customer"), getMyOrder);
 router.get("/checkout", protect, checkRole("customer"), checkout);
-router.get("/order-history", protect, checkRole("store"), getOrderHistory);
+router.get("/order-history", protect, checkRole("customer"), getOrderHistory);
 router.post(
   "/move-orders-to-history",
   protect,
