@@ -95,7 +95,7 @@ const getOrderHistoryByCustomerId = async (customers_id) => {
       p.price AS product_price
     FROM order_history oh
     JOIN products p ON oh.products_id = p.products_id
-    WHERE oh.customers_id = $1::uuid
+    WHERE oh.customers_id = $1
   `;
   return await db.query(query, [customers_id]);
 };
