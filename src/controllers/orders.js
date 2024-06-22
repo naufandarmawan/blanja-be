@@ -191,9 +191,10 @@ const moveOrdersToHistory = async (req, res, next) => {
   }
 };
 
-const getOrderHistory = async (req, res, next) => {
+const getOrderHistoryByCustomerId = async (req, res, next) => {
   try {
     const email = req.decoded.email;
+    // console.log(email);
     const {
       rows: [customer],
     } = await authModel.findByemail(email, { relation: "customers" });
@@ -216,6 +217,31 @@ const getOrderHistory = async (req, res, next) => {
   }
 };
 
+const getOrderHistoryByStoresId = async (req, res, next) => {
+  try {
+    const email = req.decoded.email;
+    const {
+      rows: [store],
+    } = await authModel.findByemail(email, { relation: "stores" });
+
+    if (!store) {
+      return next(createHttpError(404, "Store not found"));
+    }
+
+    const { rows: history } = await ordersModel.getOrderHistoryByStoresId(
+      store.stores_id
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Order history retrieved successfully.",
+      data: history,
+    });
+  } catch (error) {
+    return next(createHttpError(500, error.message));
+  }
+};
+
 module.exports = {
   addMyOrder,
   getMyOrder,
@@ -224,5 +250,6 @@ module.exports = {
   deleteMyOrder,
   checkout,
   moveOrdersToHistory,
-  getOrderHistory,
+  getOrderHistoryByCustomerId,
+  getOrderHistoryByStoresId,
 };

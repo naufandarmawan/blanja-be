@@ -4,14 +4,15 @@ const db = require("../configs/db");
 const createOrder = async (
   customers_id,
   products_id,
+  stores_id,
   color,
   quantity,
   size
 ) => {
   const order_id = uuidv4();
   await db.query(
-    `INSERT INTO "order" (order_id, customers_id, products_id, color, quantity, size) VALUES ($1, $2, $3, $4, $5, $6)`,
-    [order_id, customers_id, products_id, color, quantity, size]
+    `INSERT INTO "order" (order_id, customers_id, products_id,stores_id, color, quantity, size) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    [order_id, customers_id, products_id, stores_id, color, quantity, size]
   );
   return order_id;
 };
@@ -23,6 +24,7 @@ const getOrdersByCustomerId = async (customers_id) => {
       p.name AS product_name,
       p.image AS product_image,
       p.price AS product_price,
+      p.stores_id AS stores_id,
       p.condition AS product_condition,
       p.description AS product_description
     FROM "order" o
@@ -57,6 +59,7 @@ const addOrderToHistory = async (order) => {
     order_id,
     customers_id,
     products_id,
+    stores_id,
     color,
     quantity,
     size,
@@ -65,12 +68,13 @@ const addOrderToHistory = async (order) => {
     product_price,
   } = order;
   await db.query(
-    `INSERT INTO order_history (history_id, order_id, customers_id, products_id, color, quantity, size, product_name, product_image, product_price) 
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+    `INSERT INTO order_history (history_id, order_id, customers_id, stores_id, products_id, color, quantity, size, product_name, product_image, product_price) 
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
     [
       history_id,
       order_id,
       customers_id,
+      stores_id,
       products_id,
       color,
       quantity,
@@ -100,6 +104,22 @@ const getOrderHistoryByCustomerId = async (customers_id) => {
   return await db.query(query, [customers_id]);
 };
 
+const getOrderHistoryByStoresId = async (stores_id) => {
+  const query = `
+    SELECT 
+      oh.*,
+      p.name AS product_name,
+      p.image AS product_image,
+      p.price AS product_price,
+      s.name AS store_name
+    FROM order_history oh
+    JOIN products p ON oh.products_id = p.products_id
+    JOIN stores s ON oh.stores_id = s.stores_id
+    WHERE oh.stores_id = $1
+  `;
+  return await db.query(query, [stores_id]);
+};
+
 module.exports = {
   createOrder,
   getOrdersByCustomerId,
@@ -110,4 +130,5 @@ module.exports = {
   addOrderToHistory,
   deleteOrdersByCustomerId,
   getOrderHistoryByCustomerId,
+  getOrderHistoryByStoresId,
 };

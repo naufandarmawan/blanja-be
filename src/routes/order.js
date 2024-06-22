@@ -7,7 +7,8 @@ const {
   deleteMyOrder,
   checkout,
   moveOrdersToHistory,
-  getOrderHistory,
+  getOrderHistoryByCustomerId,
+  getOrderHistoryByStoresId,
 } = require("../controllers/orders");
 const { protect, checkRole } = require("../middlewares/auth");
 
@@ -16,7 +17,18 @@ const router = express.Router();
 router.get("/", protect, checkRole("customer"), getAllMyOrders);
 router.get("/my-order", protect, checkRole("customer"), getMyOrder);
 router.get("/checkout", protect, checkRole("customer"), checkout);
-router.get("/order-history", protect, checkRole("customer"), getOrderHistory);
+router.get(
+  "/order-history",
+  protect,
+  checkRole("customer"),
+  getOrderHistoryByCustomerId
+);
+router.get(
+  "/store-order-history",
+  protect,
+  checkRole("store"),
+  getOrderHistoryByStoresId
+);
 router.post(
   "/move-orders-to-history",
   protect,
