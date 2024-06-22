@@ -53,7 +53,7 @@ const getPaymentMethods = async () => {
   return await db.query("SELECT * FROM payment_methods");
 };
 
-const addOrderToHistory = async (order) => {
+const addOrderToHistory = async (order, payment_method) => {
   const {
     history_id,
     order_id,
@@ -63,13 +63,10 @@ const addOrderToHistory = async (order) => {
     color,
     quantity,
     size,
-    product_name,
-    product_image,
-    product_price,
   } = order;
   await db.query(
-    `INSERT INTO order_history (history_id, order_id, customers_id, stores_id, products_id, color, quantity, size, product_name, product_image, product_price) 
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+    `INSERT INTO order_history (history_id, order_id, customers_id, stores_id, products_id, color, quantity, size, payment_method) 
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
     [
       history_id,
       order_id,
@@ -79,9 +76,7 @@ const addOrderToHistory = async (order) => {
       color,
       quantity,
       size,
-      product_name,
-      product_image,
-      product_price,
+      payment_method,
     ]
   );
 };

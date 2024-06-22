@@ -9,6 +9,8 @@ const {
   moveOrdersToHistory,
   getOrderHistoryByCustomerId,
   getOrderHistoryByStoresId,
+  getPaymentMethods,
+  buyNow,
 } = require("../controllers/orders");
 const { protect, checkRole } = require("../middlewares/auth");
 
@@ -35,6 +37,13 @@ router.post(
   checkRole("customer"),
   moveOrdersToHistory
 );
+router.get(
+  "/payment-methods",
+  protect,
+  checkRole("customer"),
+  getPaymentMethods
+);
+router.post("/buy-now/:products_id", protect, checkRole("customer"), buyNow);
 router.put("/:id", protect, checkRole("customer"), updateMyOrder);
 router.delete("/:id", protect, checkRole("customer"), deleteMyOrder);
 router.post("/:products_id", protect, checkRole("customer"), addMyOrder);

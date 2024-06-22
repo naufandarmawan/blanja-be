@@ -149,6 +149,19 @@ const checkout = async (req, res, next) => {
   }
 };
 
+const getPaymentMethods = async (req, res, next) => {
+  try {
+    const { rows: paymentMethods } = await ordersModel.getPaymentMethods();
+    res.status(200).json({
+      success: true,
+      message: "Payment methods retrieved successfully.",
+      data: paymentMethods,
+    });
+  } catch (error) {
+    return next(createHttpError(500, error.message));
+  }
+};
+
 const moveOrdersToHistory = async (req, res, next) => {
   try {
     const email = req.decoded.email;
@@ -168,13 +181,18 @@ const moveOrdersToHistory = async (req, res, next) => {
       return next(createHttpError(404, "No orders found for this customer"));
     }
 
+    const { payment_method } = req.body;
+
     await db.query("BEGIN");
 
     for (const order of orders) {
-      await ordersModel.addOrderToHistory({
-        ...order,
-        history_id: uuidv4(),
-      });
+      await ordersModel.addOrderToHistory(
+        {
+          ...order,
+          history_id: uuidv4(),
+        },
+        payment_method
+      );
     }
 
     await ordersModel.deleteOrdersByCustomerId(customer.customers_id);
@@ -242,6 +260,61 @@ const getOrderHistoryByStoresId = async (req, res, next) => {
   }
 };
 
+const buyNow = async (req, res, next) => {
+  try {
+    const email = req.decoded.email;
+    const {
+      rows: [customer],
+    } = await authModel.findByemail(email, { relation: "customers" });
+
+    if (!customer) {
+      return next(createHttpError(404, "Customer not found"));
+    }
+
+    const { color, quantity, size } = req.body;
+    if (!color || !quantity || !size) {
+      return next(
+        createHttpError(
+          400,
+          "All order details (color, quantity, size) are required"
+        )
+      );
+    }
+
+    const products_id = req.params.products_id;
+    const order_id = await ordersModel.createOrder(
+      customer.customers_id,
+      products_id,
+      color,
+      quantity,
+      size
+    );
+
+    // Immediately move the order to history
+    await ordersModel.addOrderToHistory(
+      {
+        history_id: uuidv4(),
+        order_id,
+        customers_id: customer.customers_id,
+        products_id,
+        stores_id: null,
+        color,
+        quantity,
+        size,
+      },
+      null //payment method
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Order placed successfully and moved to history.",
+      data: { order_id, products_id, color, quantity, size },
+    });
+  } catch (error) {
+    return next(createHttpError(500, error.message));
+  }
+};
+
 module.exports = {
   addMyOrder,
   getMyOrder,
@@ -252,4 +325,6 @@ module.exports = {
   moveOrdersToHistory,
   getOrderHistoryByCustomerId,
   getOrderHistoryByStoresId,
+  getPaymentMethods,
+  buyNow,
 };
