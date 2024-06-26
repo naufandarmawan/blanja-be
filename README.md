@@ -84,6 +84,16 @@ cloudinary credentials:
 
 `API_SECRET`
 
+## Postman Documentation
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/33569453/2sA3JT4eB9)
+
+![alt text](./assets//image.png)
+
+## Related Project
+
+⚡[Blanja Front End](https://github.com/anditorp/blanja-fe)
+
 ## Developed by the FWM19 Team :
 
 💻 [@anditorp](https://github.com/anditorp) as back end
