@@ -36,6 +36,58 @@ Welcome to Blanja, your premier destination for all things e-commerce. Blanja of
 
 ⚡ seller can add, update, and delete their products
 
+## Features
+
+```
+└── 📁blanja-be
+    └── .env
+    └── .eslintrc.json
+    └── .gitignore
+    └── 📁assets
+        └── image.png
+        └── logo-readme.png
+    └── eslint.config.mjs
+    └── index.js
+    └── package-lock.json
+    └── package.json
+    └── README.md
+    └── 📁src
+        └── 📁configs
+            └── cloudinary.js
+            └── db.js
+        └── 📁controllers
+            └── address.js
+            └── auth.js
+            └── customers.js
+            └── orders.js
+            └── products.js
+            └── stores.js
+            └── upload.js
+        └── 📁helper
+            └── auth.js
+            └── common.js
+        └── 📁middlewares
+            └── auth.js
+            └── upload.js
+        └── 📁models
+            └── address.js
+            └── auth.js
+            └── customers.js
+            └── orders.js
+            └── products.js
+            └── stores.js
+        └── 📁routes
+            └── address.js
+            └── auth.js
+            └── customers.js
+            └── order.js
+            └── products.js
+            └── register.js
+            └── stores.js
+            └── upload.js
+    └── vercel.json
+```
+
 ## Installation
 
 #### Clone this repository :
