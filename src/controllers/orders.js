@@ -7,6 +7,7 @@ const db = require("../configs/db");
 const addMyOrder = async (req, res, next) => {
   try {
     const email = req.decoded.email;
+    const stores_id = 'c52b6f9a-ad6a-4b71-b150-a5a098579c80'
     const {
       rows: [order],
     } = await authModel.findByemail(email, { relation: "customers" });
@@ -25,6 +26,7 @@ const addMyOrder = async (req, res, next) => {
     const order_id = await ordersModel.createOrder(
       order.customers_id,
       products_id,
+      stores_id,
       color,
       quantity,
       size

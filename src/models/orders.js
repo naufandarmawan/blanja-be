@@ -11,7 +11,7 @@ const createOrder = async (
 ) => {
   const order_id = uuidv4();
   await db.query(
-    `INSERT INTO "order" (order_id, customers_id, products_id,stores_id, color, quantity, size) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    `INSERT INTO "order" (order_id, customers_id, products_id, stores_id, color, quantity, size) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
     [order_id, customers_id, products_id, stores_id, color, quantity, size]
   );
   return order_id;
