@@ -227,6 +227,7 @@ const updateProduct = async (req, res, next) => {
       condition,
       description,
       category,
+      image,
     } = req.body;
 
     const products_id = req.params.id;
