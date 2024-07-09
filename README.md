@@ -145,7 +145,9 @@ cloudinary credentials:
 ## Related Project
 
 ⚡[Blanja Backend Demo](https://blanja-be-ten.vercel.app/)  
+
 ⚡[Blanja Frontend Demo](https://blanja-fe-xi.vercel.app/)
+
 ⚡[Blanja Frontend Repository](https://github.com/naufandarmawan/blanja-fe)
 
 ## Developed by the FWM19 Team :
