@@ -36,7 +36,7 @@ Welcome to Blanja, your premier destination for all things e-commerce. Blanja of
 
 ⚡ seller can add, update, and delete their products
 
-## Features
+## Project Structure
 
 ```
 └── 📁blanja-be
