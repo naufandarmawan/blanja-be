@@ -144,14 +144,16 @@ cloudinary credentials:
 
 ## Related Project
 
-⚡[Blanja Front End](https://github.com/anditorp/blanja-fe)
+⚡[Blanja Backend Demo](https://blanja-be-ten.vercel.app/)  
+⚡[Blanja Frontend Demo](https://blanja-fe-xi.vercel.app/)
+⚡[Blanja Frontend Repository](https://github.com/naufandarmawan/blanja-fe)
 
 ## Developed by the FWM19 Team :
 
-💻 [@anditorp](https://github.com/anditorp) as back end
+💻 [@anditorp](https://github.com/anditorp) as Backend Developer
 
-💻 [@SwitchZer](https://github.com/SwitchZer) as back end
+💻 [@SwitchZer](https://github.com/SwitchZer) as Backend Developer
 
-💻 [@crossxjonathan](https://github.com/crossxjonathan) as front end
+💻 [@crossxjonathan](https://github.com/crossxjonathan) as Frontend Developer
 
-💻 [@naufandarmawan](https://github.com/naufandarmawan) as front end
+💻 [@naufandarmawan](https://github.com/naufandarmawan) as Frontend Developer
