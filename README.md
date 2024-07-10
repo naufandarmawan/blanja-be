@@ -162,6 +162,6 @@ cloudinary credentials:
 
 ## License
 
-Distributed under the MIT License. See <a href="https://github.com/naufandarmawan/blanja-be/blob/main/LICENSE">`LICENSE`</a> for more information.
+Distributed under the MIT License. See <a href="https://github.com/naufandarmawan/blanja-be/blob/master/LICENSE">`LICENSE`</a> for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
